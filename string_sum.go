@@ -2,26 +2,71 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
+	"strings"
 )
 
-//use these errors as appropriate, wrapping them with fmt.Errorf function
 var (
-	// Use when the input is empty, and input is considered empty if the string contains only whitespace
-	errorEmptyInput = errors.New("input is empty")
-	// Use when the expression has number of operands not equal to two
+	errorEmptyInput     = errors.New("input is empty")
 	errorNotTwoOperands = errors.New("expecting two operands, but received more or less")
 )
 
-// Implement a function that computes the sum of two int numbers written as a string
-// For example, having an input string "3+5", it should return output string "8" and nil error
-// Consider cases, when operands are negative ("-3+5" or "-3-5") and when input string contains whitespace (" 3 + 5 ")
-//
-//For the cases, when the input expression is not valid(contains characters, that are not numbers, +, - or whitespace)
-// the function should return an empty string and an appropriate error from strconv package wrapped into your own error
-// with fmt.Errorf function
-//
-// Use the errors defined above as described, again wrapping into fmt.Errorf
-
 func StringSum(input string) (output string, err error) {
-	return "", nil
+	input = strings.TrimSpace(input)
+	if len(input) == 0 {
+		return "", fmt.Errorf("%w", errorEmptyInput)
+	}
+
+	arr := make([]rune, 0)
+	operands := 0
+	// var x int
+	// var definedX bool
+	for _, v := range input {
+		val := string(v)
+		// if !definedX {
+		// 	_, err := strconv.Atoi(val)
+		// 	if err != nil {
+		// 	} else {
+		// 		return "", fmt.Errorf("e3: %w",
+		// 			&strconv.NumError{
+		// 				Func: "Atoi",
+		// 				Num:  strconv.Itoa(x) + val,
+		// 				Err:  strconv.ErrSyntax,
+		// 			})
+		// 	}
+		// }
+		if !strings.Contains("0123456789+- ", val) {
+			return "", fmt.Errorf("%w", errorNotTwoOperands)
+		}
+		if v != ' ' {
+			arr = append(arr, v)
+		}
+		if v == '+' || v == '-' {
+			operands++
+		}
+	}
+
+	i := 0
+	if arr[0] == '+' || arr[0] == '-' {
+		i = 1
+	}
+
+	for i < len(arr) && !(arr[i] == '+' || arr[i] == '-') {
+		i++
+	}
+
+	first, ok := strconv.ParseInt(string(arr[:i]), 10, 0)
+
+	if ok != nil {
+		return "", fmt.Errorf("%w", errorNotTwoOperands)
+	}
+
+	second, ok := strconv.ParseInt(string(arr[i:]), 10, 0)
+
+	if ok != nil {
+		return "", fmt.Errorf("%w", errorNotTwoOperands)
+	}
+
+	return strconv.FormatInt(first+second, 10), nil
 }
