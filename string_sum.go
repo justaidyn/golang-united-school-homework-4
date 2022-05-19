@@ -20,22 +20,8 @@ func StringSum(input string) (output string, err error) {
 
 	arr := make([]rune, 0)
 	operands := 0
-	// var x int
-	// var definedX bool
 	for _, v := range input {
 		val := string(v)
-		// if !definedX {
-		// 	_, err := strconv.Atoi(val)
-		// 	if err != nil {
-		// 	} else {
-		// 		return "", fmt.Errorf("e3: %w",
-		// 			&strconv.NumError{
-		// 				Func: "Atoi",
-		// 				Num:  strconv.Itoa(x) + val,
-		// 				Err:  strconv.ErrSyntax,
-		// 			})
-		// 	}
-		// }
 		if !strings.Contains("0123456789+- ", val) {
 			return "", fmt.Errorf("%w", errorNotTwoOperands)
 		}
